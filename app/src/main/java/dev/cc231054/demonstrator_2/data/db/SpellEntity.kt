@@ -9,7 +9,7 @@ data class SpellEntity(
     val id: Int = 0,
     val name: String,
     val level: Int,
-    val duration: String,
-    val range: String,
+    val duration: Int,
+    val range: Int,
     val description: String
 )
