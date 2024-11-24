@@ -4,6 +4,7 @@
 
     <application
         android:allowBackup="true"
+        android:name="dev.cc231054.demonstrator_2.SpellApplication"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"

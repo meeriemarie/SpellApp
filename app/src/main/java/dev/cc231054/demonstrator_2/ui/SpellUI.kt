@@ -28,6 +28,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dev.cc231054.demonstrator_2.data.Spell
 import dev.cc231054.demonstrator_2.ui.theme.Typography
 
@@ -49,13 +50,13 @@ fun SpellApp(modifier: Modifier = Modifier) {
         composable(Routes.NewSpell.route, arguments = listOf(navArgument("spellId") {
             type = NavType.IntType
         })) {
-            SpellDetailScreen()
+            SpellsDetailScreen()
         }
     }
 }
 
 @Composable
-fun SpellDetailScreen(
+fun SpellsDetailScreen(
     modifier: Modifier = Modifier,
     spellDetailViewModel: SpellDetailViewModel = viewModel(factory = AppViewModelProviderFactory.Factory)
 ) {
@@ -85,7 +86,7 @@ fun SpellListScreen(
                 if (index == state.selectedCardIndex) {
                     SpellDetails(spell)
                 } else {
-                    SpellListScreen(spell, onCardClick = {
+                    SpellListItem(spell, onCardClick = {
                         onSpellClick(spell.id)
                         spellViewModel.onCardClick(index)
                     })
@@ -96,7 +97,7 @@ fun SpellListScreen(
 }
 
 @Composable
-fun SpellListScreen(spell: Spell, onCardClick: () -> Unit, modifier: Modifier = Modifier) {
+fun SpellListItem(spell: Spell, onCardClick: () -> Unit, modifier: Modifier = Modifier) {
     OutlinedCard(onClick = {onCardClick()}, modifier = modifier
         .fillMaxWidth()
         .padding(8.dp)) {

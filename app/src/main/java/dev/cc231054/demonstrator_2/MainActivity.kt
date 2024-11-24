@@ -11,6 +11,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import dev.cc231054.demonstrator_2.ui.AddSpell
+import dev.cc231054.demonstrator_2.ui.BottomNavigationBar
+import dev.cc231054.demonstrator_2.ui.Screens
 import dev.cc231054.demonstrator_2.ui.SpellApp
 import dev.cc231054.demonstrator_2.ui.theme.Demonstrator2Theme
 
@@ -20,8 +26,20 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Demonstrator2Theme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                   SpellApp(Modifier.padding(innerPadding))
+                val bottomNav = rememberNavController()
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    bottomBar = { BottomNavigationBar(bottomNav) }
+                )
+                { innerPadding ->
+                    NavHost(bottomNav, Screens.Spellbook.name) {
+                        composable (Screens.Spellbook.name) {
+                            SpellApp(Modifier.padding(innerPadding))
+                        }
+                        composable(Screens.AddSpell.name) {
+                            AddSpell(Modifier.padding(innerPadding))
+                        }
+                    }
                 }
             }
         }
