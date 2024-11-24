@@ -15,8 +15,8 @@ interface SpellDao {
     @Update
     suspend fun updateSpell(spellEntity: SpellEntity)
 
-    @Delete
-    suspend fun deleteSpell(spellEntity: SpellEntity)
+    @Query("DELETE FROM spells WHERE id = :id")
+    suspend fun deleteSpell(id: Int)
 
     @Query("SELECT * FROM spells")
     fun getAllSpells(): Flow<List<SpellEntity>>

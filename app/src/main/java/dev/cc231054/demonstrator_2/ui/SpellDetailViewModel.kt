@@ -21,7 +21,7 @@ class SpellDetailViewModel(
     private val spellId: Int = checkNotNull(savedStateHandle["spellId"])
 
     private val _spellDetailUIState = MutableStateFlow(SpellDetailUIState(
-        spell = Spell(0,"",0,0,0,"")
+        spell = Spell(0,"","","","","")
     ))
     val spellDetailUIState = _spellDetailUIState.asStateFlow()
 

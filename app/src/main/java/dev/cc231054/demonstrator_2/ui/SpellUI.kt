@@ -34,7 +34,7 @@ import dev.cc231054.demonstrator_2.ui.theme.Typography
 
 enum class Routes(val route: String) {
     Spellbook("spellbook"),
-    NewSpell("newspell/{spellId}")
+    SpellDetail("details/{spellId}")
 }
 
 @Composable
@@ -47,7 +47,7 @@ fun SpellApp(modifier: Modifier = Modifier) {
                 spellId -> navController.navigate("details/$spellId")
             }
         }
-        composable(Routes.NewSpell.route, arguments = listOf(navArgument("spellId") {
+        composable(Routes.SpellDetail.route, arguments = listOf(navArgument("spellId") {
             type = NavType.IntType
         })) {
             SpellsDetailScreen()
@@ -57,7 +57,8 @@ fun SpellApp(modifier: Modifier = Modifier) {
 
 @Composable
 fun SpellsDetailScreen(
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
+        .padding(20.dp),
     spellDetailViewModel: SpellDetailViewModel = viewModel(factory = AppViewModelProviderFactory.Factory)
 ) {
     val state by spellDetailViewModel.spellDetailUIState.collectAsStateWithLifecycle()
@@ -76,9 +77,6 @@ fun SpellListScreen(
     Log.i("Spell App", "Selected: ${state.selectedCardIndex}")
 
     Column (modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        //Implement functionality to add spells
-        Button(onClick = {
-        }) { }
         Spacer(Modifier.height(16.dp))
         LazyColumn {
             itemsIndexed(state.spells) {
