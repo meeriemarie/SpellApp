@@ -7,7 +7,6 @@ import dev.cc231054.demonstrator_2.data.db.SpellDatabase
 class SpellApplication : Application() {
     val spellRepository by lazy {
         val database = SpellDatabase.getDatabase(this)
-
         SpellRepository(database.spellDao())
     }
 }

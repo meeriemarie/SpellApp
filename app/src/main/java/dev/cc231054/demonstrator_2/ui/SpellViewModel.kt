@@ -1,17 +1,19 @@
 package dev.cc231054.demonstrator_2.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.cc231054.demonstrator_2.data.SpellRepository
 import dev.cc231054.demonstrator_2.data.db.SpellEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SpellViewModel(val repository: SpellRepository) : ViewModel() {
     private val _spellUiState = MutableStateFlow(SpellUiState(emptyList(), null))
-    val spellsUiState = _spellUiState
+    val spellsUiState = _spellUiState.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -26,6 +28,7 @@ class SpellViewModel(val repository: SpellRepository) : ViewModel() {
     }
 
     fun onCardClick(index: Int) {
+        Log.i("State:", index.toString())
         _spellUiState.update {
             it.copy(selectedCardIndex = index)
         }
@@ -51,7 +54,7 @@ class SpellViewModel(val repository: SpellRepository) : ViewModel() {
         }
     }
 
-    fun deleteSpell(id: Int.Companion) {
+    fun deleteSpell(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteSpell(id)
         }

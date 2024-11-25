@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.cc231054.demonstrator_2.data.Spell
 import dev.cc231054.demonstrator_2.data.SpellRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -31,6 +32,12 @@ class SpellDetailViewModel(
             _spellDetailUIState.update {
                 it.copy(spell = spell)
             }
+        }
+    }
+
+    fun deleteSpell() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteSpell(spellId)
         }
     }
 }

@@ -24,7 +24,7 @@ fun BottomNavigationBar(navController: NavController){
     NavigationBar {
         NavigationBarItem(
             selected = activeSreen == Screens.Spellbook,
-            onClick = {navController.navigate((Screens.Spellbook.name))},
+            onClick = {navController.navigate(Screens.Spellbook.name)},
             icon = { Icon(imageVector = Icons.Filled.Home, contentDescription = "Spellbook") },
             label = { Text("Spellbook") }
         )
