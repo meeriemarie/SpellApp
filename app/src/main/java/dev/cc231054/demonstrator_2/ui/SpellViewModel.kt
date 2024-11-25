@@ -2,11 +2,7 @@ package dev.cc231054.demonstrator_2.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.cc231054.demonstrator_2.MainActivity
-import dev.cc231054.demonstrator_2.data.Spell
 import dev.cc231054.demonstrator_2.data.SpellRepository
-import dev.cc231054.demonstrator_2.data.db.SpellDao
-import dev.cc231054.demonstrator_2.data.db.SpellDatabase
 import dev.cc231054.demonstrator_2.data.db.SpellEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -55,7 +51,7 @@ class SpellViewModel(val repository: SpellRepository) : ViewModel() {
         }
     }
 
-    fun deleteSpell(id: Int) {
+    fun deleteSpell(id: Int.Companion) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteSpell(id)
         }
