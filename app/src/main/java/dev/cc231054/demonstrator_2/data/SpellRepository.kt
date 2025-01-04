@@ -25,4 +25,9 @@ class SpellRepository (private val spellDao: SpellDao) {
         val deletedId = spellDao.deleteSpell(spellId);
         return deletedId;
     }
+
+    suspend fun updateSpell(spellEntity: SpellEntity) {
+        val editedSpell = spellDao.updateSpell(spellEntity);
+        return editedSpell;
+    }
 }

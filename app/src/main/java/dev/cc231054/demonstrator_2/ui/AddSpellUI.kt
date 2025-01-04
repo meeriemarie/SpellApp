@@ -21,7 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun AddSpell(modifier: Modifier = Modifier, spellViewModel: SpellViewModel = viewModel(factory = AppViewModelProviderFactory.Factory)) {
+fun AddSpell(modifier: Modifier = Modifier,
+             spellViewModel: SpellViewModel = viewModel(factory = AppViewModelProviderFactory.Factory)) {
     var name by rememberSaveable { mutableStateOf("") }
     var level by rememberSaveable { mutableStateOf("") }
     var duration by rememberSaveable { mutableStateOf("") }

@@ -32,8 +32,8 @@ class MainActivity : ComponentActivity() {
                     bottomBar = { BottomNavigationBar(bottomNav) }
                 )
                 { innerPadding ->
-                    NavHost(bottomNav, Screens.Spellbook.name) {
-                        composable (Screens.Spellbook.name) {
+                    NavHost(bottomNav, Screens.MySpells.name) {
+                        composable (Screens.MySpells.name) {
                             SpellApp(Modifier.padding(innerPadding))
                         }
                         composable(Screens.AddSpell.name) {

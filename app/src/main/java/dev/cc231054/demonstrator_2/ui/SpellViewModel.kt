@@ -3,6 +3,7 @@ package dev.cc231054.demonstrator_2.ui
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.cc231054.demonstrator_2.data.Spell
 import dev.cc231054.demonstrator_2.data.SpellRepository
 import dev.cc231054.demonstrator_2.data.db.SpellEntity
 import kotlinx.coroutines.Dispatchers
@@ -48,7 +49,7 @@ class SpellViewModel(val repository: SpellRepository) : ViewModel() {
                     duration = duration,
                     range = range,
                     description = description
-                    )
+                )
             )
 
         }
@@ -57,6 +58,28 @@ class SpellViewModel(val repository: SpellRepository) : ViewModel() {
     fun deleteSpell(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteSpell(id)
+        }
+    }
+
+    fun updateSpell(
+        id: Int,
+        name: String,
+        level: String,
+        duration: String,
+        range: String,
+        description: String
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateSpell(
+                SpellEntity(
+                    id = id,
+                    name = name,
+                    level = level,
+                    duration = duration,
+                    range = range,
+                    description = description
+                )
+            )
         }
     }
 }

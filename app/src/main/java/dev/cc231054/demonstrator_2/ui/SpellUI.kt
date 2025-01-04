@@ -9,7 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,33 +29,48 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dev.cc231054.demonstrator_2.data.Spell
+import dev.cc231054.demonstrator_2.data.db.SpellEntity
 import dev.cc231054.demonstrator_2.ui.theme.Typography
 
 enum class Routes(val route: String) {
-    Spellbook("spellbook"),
-    SpellDetail("details/{spellId}")
+    MySpells("my spells"),
+    SpellDetail("details/{spellId}"),
+    EditSpell("edit/{spellId}")
 }
 
 @Composable
 fun SpellApp(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
 
-    NavHost(navController, Routes.Spellbook.route, modifier = Modifier) {
-        composable(Routes.Spellbook.route) {
+    NavHost(navController, Routes.MySpells.route, modifier = Modifier) {
+        composable(Routes.MySpells.route) {
             SpellListScreen(
                 onDeleteClick = {
-                    navController.navigate(Screens.Spellbook.name)
-                }
-            ) {
+                    navController.navigate(Screens.MySpells.name)
+                },
+                onEditClick = {
+                    // navController.navigate(Screens.MySpells.name)
+                    navController.navigate("edit")
+                })
+            {
                 spellId -> navController.navigate("details/$spellId")
             }
         }
         composable(Routes.SpellDetail.route, arguments = listOf(navArgument("spellId") {
             type = NavType.IntType
         })) {
-            SpellsDetailScreen(onDeleteClick = {
-                    navController.navigate(Screens.Spellbook.name)
-            })
+            SpellsDetailScreen(
+                onDeleteClick = {
+                    navController.navigate(Screens.MySpells.name)
+            },
+                onEditClick = {
+                    spellId -> navController.navigate("edit/$spellId")
+                })
+        }
+        composable (Routes.EditSpell.route, arguments = listOf(navArgument("spellId") {
+            type = NavType.IntType
+        })){
+            EditSpellScreen()
         }
     }
 }
@@ -61,7 +80,8 @@ fun SpellsDetailScreen(
     modifier: Modifier = Modifier
         .padding(20.dp),
     spellDetailViewModel: SpellDetailViewModel = viewModel(factory = AppViewModelProviderFactory.Factory),
-    onDeleteClick: () -> Unit
+    onDeleteClick: () -> Unit,
+    onEditClick:(spellId: Int) -> Unit
 ) {
     val state by spellDetailViewModel.spellDetailUIState.collectAsStateWithLifecycle()
     SpellDetails(
@@ -70,6 +90,9 @@ fun SpellsDetailScreen(
         onDeleteButton = {
             spellDetailViewModel.deleteSpell()
             onDeleteClick()
+        },
+        onEditButton = {
+            onEditClick(state.spell.id)
         }
     )
 }
@@ -80,6 +103,7 @@ fun SpellListScreen(
     modifier: Modifier = Modifier,
     spellViewModel: SpellViewModel = viewModel(factory = AppViewModelProviderFactory.Factory),
     onDeleteClick: () -> Unit,
+    onEditClick: () -> Unit,
     onSpellClick: (Int) -> Unit
 ) {
     val state by spellViewModel.spellsUiState.collectAsStateWithLifecycle();
@@ -96,6 +120,10 @@ fun SpellListScreen(
                         onDeleteButton = {
                             spellViewModel.deleteSpell(index)
                             onDeleteClick()
+                        },
+                        onEditButton = {
+                            spellViewModel.onCardClick(index)
+                            onEditClick()
                         })
                 } else {
                     Log.i("Spell App: Index", "Selected: ${index}")
@@ -127,7 +155,8 @@ fun SpellListItem(spell: Spell,
 @Composable
 fun SpellDetails(spell: Spell,
                  modifier: Modifier = Modifier,
-                 onDeleteButton: () -> Unit,) {
+                 onDeleteButton: () -> Unit,
+                 onEditButton: () -> Unit){
     OutlinedCard(
         modifier
             .fillMaxWidth()
@@ -144,7 +173,10 @@ fun SpellDetails(spell: Spell,
                 Text(spell.description, style = Typography.bodySmall)
                 Spacer(Modifier.width(16.dp))
                 Button(onClick = onDeleteButton) {
-                    Text("Delete")
+                    Icon( imageVector = Icons.Filled.Delete, contentDescription = "Delete")
+                }
+                Button(onClick = onEditButton) {
+                    Icon( imageVector = Icons.Filled.Edit, contentDescription = "Edit")
                 }
             }
         }
