@@ -11,5 +11,6 @@ data class SpellEntity(
     val level: String,
     val duration: String,
     val range: String,
-    val description: String
+    val description: String,
+    val isFavorite: Boolean = false
 )

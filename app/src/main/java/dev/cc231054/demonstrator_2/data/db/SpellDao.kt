@@ -23,4 +23,10 @@ interface SpellDao {
 
     @Query("SELECT * FROM spells WHERE id = :spellId")
     suspend fun findSpellById(spellId : Int) : SpellEntity
+
+    @Query("SELECT * FROM spells WHERE isFavorite = 1")
+    fun getFavoriteSpells(): Flow<List<SpellEntity>>
+
+    @Query("UPDATE spells SET isFavorite = :isFav WHERE id = :spellId")
+    fun setFavoriteSpell(isFav: Boolean, spellId: Int)
 }

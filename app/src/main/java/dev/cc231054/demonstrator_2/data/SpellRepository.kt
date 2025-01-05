@@ -7,13 +7,19 @@ import kotlinx.coroutines.flow.map
 class SpellRepository (private val spellDao: SpellDao) {
     val spells = spellDao.getAllSpells().map { list ->
         list.map{ entity ->
-            Spell(entity.id, entity.name, entity.level, entity.range, entity.duration, entity.description)
+            Spell(entity.id, entity.name, entity.level, entity.range, entity.duration, entity.description, entity.isFavorite)
+        }
+    }
+
+    val favoriteSpells = spellDao.getFavoriteSpells().map { list ->
+        list.map { entity ->
+            Spell(entity.id, entity.name, entity.level, entity.range, entity.duration, entity.description, entity.isFavorite)
         }
     }
 
     suspend fun findSpellById(spellId: Int) : Spell {
         val entity = spellDao.findSpellById(spellId)
-        return Spell(entity.id, entity.name, entity.level, entity.duration, entity.range, entity.description)
+        return Spell(entity.id, entity.name, entity.level, entity.duration, entity.range, entity.description, entity.isFavorite)
     }
 
     suspend fun addSpell(spellEntity: SpellEntity) {
@@ -30,4 +36,21 @@ class SpellRepository (private val spellDao: SpellDao) {
         val editedSpell = spellDao.updateSpell(spellEntity);
         return editedSpell;
     }
+
+    suspend fun toggleFavorite(spell: Spell) {
+        /*
+        val updatedEntity = SpellEntity(
+            id = spell.id,
+            name = spell.name,
+            level = spell.level,
+            duration = spell.duration,
+            range = spell.range,
+            description = spell.description,
+            isFavorite = spell.isFavorite
+        )
+         */
+        spellDao.setFavoriteSpell(!spell.isFavorite, spell.id)
+        //spellDao.updateSpell(updatedEntity)
+    }
+
 }
