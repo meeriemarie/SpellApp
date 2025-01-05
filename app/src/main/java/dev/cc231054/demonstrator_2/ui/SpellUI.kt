@@ -1,7 +1,9 @@
 package dev.cc231054.demonstrator_2.ui
 
 import android.util.Log
+import android.widget.Button
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,14 +14,18 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -93,6 +99,9 @@ fun SpellsDetailScreen(
         },
         onEditButton = {
             onEditClick(state.spell.id)
+        },
+        onFavoriteButton = {
+            spellDetailViewModel.toggleFavorite(state.spell);
         }
     )
 }
@@ -124,14 +133,22 @@ fun SpellListScreen(
                         onEditButton = {
                             spellViewModel.onCardClick(index)
                             onEditClick()
-                        })
+                        },
+                        onFavoriteButton = {
+                            spellViewModel.toggleFavorite(spell)
+                        }
+                    )
                 } else {
                     Log.i("Spell App: Index", "Selected: ${index}")
                     SpellListItem(spell,
                         onCardClick = {
                             onSpellClick(spell.id)
                             spellViewModel.onCardClick(index)
-                    })
+                    },
+                        onFavoriteClick = {
+                            spellViewModel.toggleFavorite(spell)
+                        }
+                        )
                 }
             }
         }
@@ -141,13 +158,23 @@ fun SpellListScreen(
 @Composable
 fun SpellListItem(spell: Spell,
                   onCardClick: () -> Unit,
+                  onFavoriteClick: () -> Unit,
                   modifier: Modifier = Modifier
 ) {
     OutlinedCard(onClick = onCardClick, modifier = modifier
         .fillMaxWidth()
         .padding(8.dp)) {
         Column(Modifier.padding(16.dp)) {
-            Text(spell.name, style = Typography.headlineMedium)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(spell.name, style = Typography.headlineMedium)
+                IconButton(onClick = onFavoriteClick) {
+                    Icon(
+                        imageVector = if (spell.isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                        contentDescription = if (spell.isFavorite) "Unfavorite" else "Favorite",
+                        tint = if (spell.isFavorite) Color.Red else Color.Gray
+                    )
+                }
+            }
         }
     }
 }
@@ -156,28 +183,38 @@ fun SpellListItem(spell: Spell,
 fun SpellDetails(spell: Spell,
                  modifier: Modifier = Modifier,
                  onDeleteButton: () -> Unit,
+                 onFavoriteButton: () -> Unit,
                  onEditButton: () -> Unit){
     OutlinedCard(
         modifier
             .fillMaxWidth()
             .padding(8.dp)) {
-        Column (Modifier.padding(16.dp)) {
-            Text(spell.name, style = Typography.headlineMedium)
-            Column {
-                Text("Level ${spell.level} spell", style = Typography.bodySmall)
-                Spacer(Modifier.width(16.dp))
-                Text("Range: ${spell.range} feet", style = Typography.bodySmall)
-                Spacer(Modifier.width(16.dp))
-                Text("Duration: ${spell.duration} minutes", style = Typography.bodySmall)
-                Spacer(Modifier.width(16.dp))
-                Text(spell.description, style = Typography.bodySmall)
-                Spacer(Modifier.width(16.dp))
-                Button(onClick = onDeleteButton) {
-                    Icon( imageVector = Icons.Filled.Delete, contentDescription = "Delete")
+        Column(Modifier.padding(16.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(spell.name, style = Typography.headlineMedium)
+                IconButton(onClick = onFavoriteButton) {
+                    Icon(
+                        imageVector = if (spell.isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                        contentDescription = if (spell.isFavorite) "Unfavorite" else "Favorite",
+                        tint = if (spell.isFavorite) Color.Red else Color.Gray
+                    )
                 }
-                Button(onClick = onEditButton) {
-                    Icon( imageVector = Icons.Filled.Edit, contentDescription = "Edit")
-                }
+            }
+        }
+        Column {
+            Text("Level ${spell.level} spell", style = Typography.bodySmall)
+            Spacer(Modifier.width(16.dp))
+            Text("Range: ${spell.range} feet", style = Typography.bodySmall)
+            Spacer(Modifier.width(16.dp))
+            Text("Duration: ${spell.duration} minutes", style = Typography.bodySmall)
+            Spacer(Modifier.width(16.dp))
+            Text(spell.description, style = Typography.bodySmall)
+            Spacer(Modifier.width(16.dp))
+            Button(onClick = onDeleteButton) {
+                Icon( imageVector = Icons.Filled.Delete, contentDescription = "Delete")
+            }
+            Button(onClick = onEditButton) {
+                Icon( imageVector = Icons.Filled.Edit, contentDescription = "Edit")
             }
         }
     }

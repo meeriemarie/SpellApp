@@ -28,6 +28,7 @@ fun AddSpell(modifier: Modifier = Modifier,
     var duration by rememberSaveable { mutableStateOf("") }
     var range by rememberSaveable { mutableStateOf("") }
     var description by rememberSaveable { mutableStateOf("") }
+    var isFavorite by rememberSaveable { mutableStateOf(false) }
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -50,13 +51,15 @@ fun AddSpell(modifier: Modifier = Modifier,
                 level,
                 duration,
                 range,
-                description
+                description,
+                isFavorite
             )
             name = ""
             level = ""
             duration = ""
             range = ""
             description = ""
+            isFavorite = false
         })
     }
 }

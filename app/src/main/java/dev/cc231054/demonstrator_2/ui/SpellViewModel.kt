@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.cc231054.demonstrator_2.data.Spell
 import dev.cc231054.demonstrator_2.data.SpellRepository
+import dev.cc231054.demonstrator_2.data.db.SpellDao
 import dev.cc231054.demonstrator_2.data.db.SpellEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -15,6 +17,9 @@ import kotlinx.coroutines.launch
 class SpellViewModel(val repository: SpellRepository) : ViewModel() {
     private val _spellUiState = MutableStateFlow(SpellUiState(emptyList(), null))
     val spellsUiState = _spellUiState.asStateFlow()
+
+    private val _favoriteUiState = MutableStateFlow<List<Spell>>(emptyList())
+    val favoriteUiState = _favoriteUiState.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -24,6 +29,12 @@ class SpellViewModel(val repository: SpellRepository) : ViewModel() {
                         spells = data
                     )
                 }
+            }
+        }
+
+        viewModelScope.launch {
+            repository.favoriteSpells.collect { favorites ->
+                _favoriteUiState.value = favorites
             }
         }
     }
@@ -39,7 +50,8 @@ class SpellViewModel(val repository: SpellRepository) : ViewModel() {
                  level: String,
                  duration: String,
                  range: String,
-                 description: String
+                 description: String,
+                 isFavorite: Boolean,
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.addSpell(
@@ -48,7 +60,8 @@ class SpellViewModel(val repository: SpellRepository) : ViewModel() {
                     level = level,
                     duration = duration,
                     range = range,
-                    description = description
+                    description = description,
+                    isFavorite = isFavorite
                 )
             )
 
@@ -67,7 +80,8 @@ class SpellViewModel(val repository: SpellRepository) : ViewModel() {
         level: String,
         duration: String,
         range: String,
-        description: String
+        description: String,
+        isFavorite: Boolean
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.updateSpell(
@@ -77,9 +91,17 @@ class SpellViewModel(val repository: SpellRepository) : ViewModel() {
                     level = level,
                     duration = duration,
                     range = range,
-                    description = description
+                    description = description,
+                    isFavorite = isFavorite
                 )
             )
         }
     }
+
+    fun toggleFavorite(spell: Spell) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.toggleFavorite(spell)
+        }
+    }
+
 }

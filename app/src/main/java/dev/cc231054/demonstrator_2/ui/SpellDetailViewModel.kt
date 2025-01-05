@@ -23,7 +23,7 @@ class SpellDetailViewModel(
     private val spellId: Int = checkNotNull(savedStateHandle["spellId"])
 
     private val _spellDetailUIState = MutableStateFlow(SpellDetailUIState(
-        spell = Spell(0,"","","","","")
+        spell = Spell(0,"","","","","", false)
     ))
     val spellDetailUIState = _spellDetailUIState.asStateFlow()
 
@@ -42,23 +42,9 @@ class SpellDetailViewModel(
         }
     }
 
-    fun updateSpell(
-        name: String,
-        level: String,
-        duration: String,
-        range: String,
-        description: String
-    ) {
+    fun toggleFavorite(spell: Spell) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.updateSpell(
-                SpellEntity(
-                    name = name,
-                    level = level,
-                    duration = duration,
-                    range = range,
-                    description = description
-                )
-            )
+            repository.toggleFavorite(spell)
         }
     }
 }

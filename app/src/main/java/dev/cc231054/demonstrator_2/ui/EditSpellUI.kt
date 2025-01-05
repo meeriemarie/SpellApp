@@ -44,6 +44,7 @@ fun EditSpell(modifier: Modifier = Modifier,
     var duration by rememberSaveable { mutableStateOf(spell.duration) }
     var range by rememberSaveable { mutableStateOf(spell.range) }
     var description by rememberSaveable { mutableStateOf(spell.description) }
+    var isFavorite by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(spell) {
         name = spell.name
@@ -51,6 +52,7 @@ fun EditSpell(modifier: Modifier = Modifier,
         duration = spell.duration
         range = spell.range
         description = spell.description
+        isFavorite = spell.isFavorite
     }
 
     Log.i("Spell App", name)
@@ -77,13 +79,15 @@ fun EditSpell(modifier: Modifier = Modifier,
                 level = level,
                 duration = duration,
                 range  = range,
-                description = description
+                description = description,
+                isFavorite = isFavorite
             )
             name = ""
             level = ""
             duration = ""
             range = ""
             description = ""
+            isFavorite = false
         })
     }
 }
