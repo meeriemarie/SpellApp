@@ -53,6 +53,16 @@ android {
 dependencies {
     val roomVersion = "2.6.1"
     val navVersion = "2.8.4"
+    val retrofit_version = "2.11.0"
+    implementation("com.squareup.retrofit2:converter-kotlinx-serialization:$retrofit_version")
+    implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+
+    implementation ("androidx.compose.runtime:runtime-livedata:1.6.0")
 
     implementation("androidx.room:room-runtime:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")

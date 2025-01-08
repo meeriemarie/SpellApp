@@ -4,8 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import dev.cc231054.demonstrator_2.data.db.remote.ApiSpell
 
-@Database(entities = [SpellEntity::class], version = 2, exportSchema = false)
+@Database(entities = [SpellEntity::class, ApiSpell::class], version = 4, exportSchema = false)
 abstract class SpellDatabase: RoomDatabase() {
     abstract fun spellDao(): SpellDao
 

@@ -1,25 +1,66 @@
 package dev.cc231054.demonstrator_2.ui
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.cc231054.demonstrator_2.data.Spell
 import dev.cc231054.demonstrator_2.data.SpellRepository
-import dev.cc231054.demonstrator_2.data.db.SpellDao
 import dev.cc231054.demonstrator_2.data.db.SpellEntity
+import dev.cc231054.demonstrator_2.data.db.remote.ApiSpell
+import dev.cc231054.demonstrator_2.data.db.remote.SpellRemoteService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import kotlin.Result
 
-class SpellViewModel(val repository: SpellRepository) : ViewModel() {
+class SpellViewModel(private val repository: SpellRepository) : ViewModel() {
+    private val BASE_URL = "https://www.dnd5eapi.co/api/"
+
+    private val _apiSpells = MutableLiveData<List<ApiSpell>>()
+    val apiSpells: LiveData<List<ApiSpell>> = _apiSpells
+
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> = _errorMessage
+
+    private val apiService: SpellRemoteService = Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+        .create(SpellRemoteService::class.java)
+
+    fun getApiSpells() {
+        viewModelScope.launch {
+            try {
+                val response = apiService.getSpells()
+                if (response.isSuccessful) {
+                    _apiSpells.postValue(response.body())
+                } else {
+                    _errorMessage.postValue("Error: ${response.message()}")
+                }
+            } catch (e: Exception) {
+                _errorMessage.postValue("Failure: ${e.message}")
+            }
+        }
+    }
+
+
     private val _spellUiState = MutableStateFlow(SpellUiState(emptyList(), null))
     val spellsUiState = _spellUiState.asStateFlow()
 
     private val _favoriteUiState = MutableStateFlow<List<Spell>>(emptyList())
     val favoriteUiState = _favoriteUiState.asStateFlow()
+
 
     init {
         viewModelScope.launch {
@@ -32,11 +73,13 @@ class SpellViewModel(val repository: SpellRepository) : ViewModel() {
             }
         }
 
+
         viewModelScope.launch {
             repository.favoriteSpells.collect { favorites ->
                 _favoriteUiState.value = favorites
             }
         }
+
     }
 
     fun onCardClick(index: Int) {

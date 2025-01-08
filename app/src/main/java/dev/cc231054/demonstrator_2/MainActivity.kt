@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import dev.cc231054.demonstrator_2.ui.AddSpell
 import dev.cc231054.demonstrator_2.ui.BottomNavigationBar
 import dev.cc231054.demonstrator_2.ui.FavoriteSpellScreen
+import dev.cc231054.demonstrator_2.ui.RemoteSpellList
 import dev.cc231054.demonstrator_2.ui.Screens
 import dev.cc231054.demonstrator_2.ui.SpellApp
 import dev.cc231054.demonstrator_2.ui.theme.Demonstrator2Theme
@@ -41,8 +42,10 @@ class MainActivity : ComponentActivity() {
                             AddSpell(Modifier.padding(innerPadding))
                         }
                         composable(Screens.SavedSpells.name) {
-                            FavoriteSpellScreen(
-                                Modifier.padding(innerPadding))
+                            FavoriteSpellScreen(Modifier.padding(innerPadding))
+                        }
+                        composable(Screens.SpellList.name) {
+                            RemoteSpellList(Modifier.padding(innerPadding))
                         }
                     }
                 }

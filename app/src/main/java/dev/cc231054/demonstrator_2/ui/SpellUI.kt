@@ -39,7 +39,7 @@ import dev.cc231054.demonstrator_2.data.db.SpellEntity
 import dev.cc231054.demonstrator_2.ui.theme.Typography
 
 enum class Routes(val route: String) {
-    MySpells("my spells"),
+    MySpells("my_spells"),
     SpellDetail("details/{spellId}"),
     EditSpell("edit/{spellId}")
 }
@@ -52,7 +52,7 @@ fun SpellApp(modifier: Modifier = Modifier) {
         composable(Routes.MySpells.route) {
             SpellListScreen(
                 onDeleteClick = {
-                    navController.navigate(Screens.MySpells.name)
+                    navController.navigate("my_spells")
                 },
                 onEditClick = {
                     // navController.navigate(Screens.MySpells.name)
@@ -67,7 +67,7 @@ fun SpellApp(modifier: Modifier = Modifier) {
         })) {
             SpellsDetailScreen(
                 onDeleteClick = {
-                    navController.navigate(Screens.MySpells.name)
+                    navController.navigate("my_spells")
             },
                 onEditClick = {
                     spellId -> navController.navigate("edit/$spellId")

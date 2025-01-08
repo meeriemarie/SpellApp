@@ -97,7 +97,7 @@ fun changeName(name: String, onNameChange: (String) -> Unit) {
         OutlinedTextField(
             value = name,
             onValueChange = onNameChange,
-            label = { Text("Enter Name")}
+            label = { Text("Enter spell Name")}
         )
 }
 
@@ -105,7 +105,8 @@ fun changeName(name: String, onNameChange: (String) -> Unit) {
 fun changeLevel(level: String, onLevelChange: (String) -> Unit) {
     OutlinedTextField(
         value = level,
-        onValueChange = onLevelChange
+        onValueChange = onLevelChange,
+        label = { Text(text = "Enter level") }
     )
 }
 
@@ -114,6 +115,7 @@ fun changeDuration(duration: String, onDurationChange: (String) -> Unit) {
     OutlinedTextField(
         value = duration,
         onValueChange = onDurationChange,
+        label = { Text(text = "Enter duration in minutes") }
     )
 }
 
@@ -122,6 +124,7 @@ fun changeRange(range: String, onRangeChange: (String) -> Unit) {
     OutlinedTextField(
         value = range,
         onValueChange = onRangeChange,
+        label = { Text(text = "Enter range in feet") }
     )
 }
 
@@ -130,6 +133,7 @@ fun changeDescription(description: String, onDescriptionChange: (String) -> Unit
     OutlinedTextField(
         value = description,
         onValueChange = onDescriptionChange,
+        label = { Text(text = "Enter description") }
     )
 }
 
